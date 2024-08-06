@@ -1,0 +1,10 @@
+C:\Users\ezeki\OneDrive\Documents\IT_Projects\Software_architect\New_Architect\Figraph\Rust_Projects\repo_parser\target\debug\deps\libversion_check-afd939b3ab31790d.rmeta: C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src/lib.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src\version.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src\channel.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src\date.rs
+
+C:\Users\ezeki\OneDrive\Documents\IT_Projects\Software_architect\New_Architect\Figraph\Rust_Projects\repo_parser\target\debug\deps\libversion_check-afd939b3ab31790d.rlib: C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src/lib.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src\version.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src\channel.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src\date.rs
+
+C:\Users\ezeki\OneDrive\Documents\IT_Projects\Software_architect\New_Architect\Figraph\Rust_Projects\repo_parser\target\debug\deps\version_check-afd939b3ab31790d.d: C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src/lib.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src\version.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src\channel.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src\date.rs
+
+C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src/lib.rs:
+C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src\version.rs:
+C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src\channel.rs:
+C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\version_check-0.9.5\src\date.rs:

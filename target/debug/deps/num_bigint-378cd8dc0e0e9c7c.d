@@ -1,0 +1,10 @@
+C:\Users\ezeki\OneDrive\Documents\IT_Projects\Software_architect\New_Architect\Figraph\Rust_Projects\repo_parser\target\debug\deps\libnum_bigint-378cd8dc0e0e9c7c.rmeta: C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\lib.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\macros.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\bigint.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\biguint.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\algorithms.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\monty.rs
+
+C:\Users\ezeki\OneDrive\Documents\IT_Projects\Software_architect\New_Architect\Figraph\Rust_Projects\repo_parser\target\debug\deps\num_bigint-378cd8dc0e0e9c7c.d: C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\lib.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\macros.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\bigint.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\biguint.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\algorithms.rs C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\monty.rs
+
+C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\lib.rs:
+C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\macros.rs:
+C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\bigint.rs:
+C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\biguint.rs:
+C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\algorithms.rs:
+C:\Users\ezeki\.cargo\registry\src\index.crates.io-6f17d22bba15001f\num-bigint-0.2.6\src\monty.rs:
