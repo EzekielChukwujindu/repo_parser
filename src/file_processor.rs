@@ -1,15 +1,14 @@
 use std::collections::HashMap;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use tokio::fs;
-use tokio::task;
 use crate::code_segmenter::CodeSegmenter;
 
 async fn process_file(
     file_path: String,
     language_extensions: Arc<HashMap<String, String>>,
     language_segmenters: Arc<HashMap<String, fn(String) -> Box<dyn CodeSegmenter>>>,
-    main_root: String,
+    main_root: Arc<String>,
 ) {
     let path = Path::new(&file_path);
     if let Some(extension) = path.extension() {
@@ -20,7 +19,11 @@ async fn process_file(
                         let segmenter = segmenter_fn(code);
                         let simplified_code = segmenter.simplify_code();
 
-                        let save_path = Path::new(&main_root).join("_arch_").join(path.strip_prefix(&main_root).unwrap());
+                        // Convert Arc<String> to &str and then to Path
+                        let main_root_path = Path::new(&*main_root); // Dereference Arc to &str
+                        let arch_dir = main_root_path.parent().unwrap().join("_arch_");
+                        let save_path = arch_dir.join(path.strip_prefix(main_root_path).unwrap_or(&path));
+
                         if let Err(e) = fs::create_dir_all(save_path.parent().unwrap()).await {
                             eprintln!("Error creating directory: {}", e);
                             return;
@@ -31,12 +34,23 @@ async fn process_file(
                         }
                     }
                     Err(e) => {
-                        eprintln!("Error reading file {}: {}", file_path, e);
-                    }
+                        // Log the error to _arch_/error.txt
+                        let error_path = Path::new(&*main_root).parent().unwrap().join("_arch_").join("error.txt");
+                        let error_message = format!("Error reading file {}: {}\n", file_path, e);
+
+                        if let Err(e) = fs::create_dir_all(error_path.parent().unwrap()).await {
+                            eprintln!("Error creating directory for error log: {}", e);
+                            return;
+                        }
+
+                        if let Err(e) = fs::write(&error_path, error_message).await {
+                            eprintln!("Error writing to error log: {}", e);
+                        }
                 }
             }
         }
     }
+}
 }
 
 pub async fn main_parser(
@@ -46,23 +60,35 @@ pub async fn main_parser(
 ) {
     let language_extensions = Arc::new(language_extensions);
     let language_segmenters = Arc::new(language_segmenters);
-    let mut tasks = Vec::new();
+    let main_root = Arc::new(directory_path);
 
-    let mut entries = fs::read_dir(&directory_path).await.unwrap();
-    while let Some(entry) = entries.next_entry().await.unwrap() {
-        let file_path = entry.path();
-        if file_path.is_file() {
-            let task = task::spawn(process_file(
-                file_path.to_str().unwrap().to_string(),
-                Arc::clone(&language_extensions),
-                Arc::clone(&language_segmenters),
-                directory_path.clone(),
-            ));
-            tasks.push(task);
+    let mut tasks = Vec::new();
+    let mut stack = vec![PathBuf::from(&*main_root)];  // Dereference Arc to PathBuf
+
+    while let Some(current_dir) = stack.pop() {
+        let mut entries = fs::read_dir(&current_dir).await.unwrap();
+        while let Some(entry) = entries.next_entry().await.unwrap() {
+            let path = entry.path();
+            if path.is_dir() {
+                stack.push(path);
+            } else if path.is_file() {
+                let file_path = path.to_str().unwrap().to_string();
+                let language_extensions = Arc::clone(&language_extensions);
+                let language_segmenters = Arc::clone(&language_segmenters);
+                let main_root = Arc::clone(&main_root);  // Clone the Arc
+                tasks.push(tokio::spawn(process_file(
+                    file_path,
+                    language_extensions,
+                    language_segmenters,
+                    main_root,
+                )));
+            }
         }
     }
 
     for task in tasks {
-        task.await.unwrap();
+        if let Err(e) = task.await {
+            eprintln!("Task failed: {}", e);
+        }
     }
 }
