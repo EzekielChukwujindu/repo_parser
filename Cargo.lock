@@ -637,6 +637,7 @@ name = "repo_parser"
 version = "0.1.0"
 dependencies = [
  "git2",
+ "rand",
  "rustpython-parser",
  "tokio",
  "tree-sitter",
