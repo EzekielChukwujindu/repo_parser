@@ -12,7 +12,7 @@ mod javascript_segmenter;
 // mod lua_segmenter;
 // mod perl_segmenter;
 // mod typescript_segmenter;
-// mod java_segmenter;
+mod java_segmenter;
 // mod php_segmenter;
 // mod elixir_segmenter;
 
@@ -30,6 +30,6 @@ pub use javascript_segmenter::JavaScriptSegmenter;
 // pub use lua_segmenter::LuaSegmenter;
 // pub use perl_segmenter::PerlSegmenter;
 // pub use typescript_segmenter::TypeScriptSegmenter;
-// pub use java_segmenter::JavaSegmenter;
+pub use java_segmenter::JavaSegmenter;
 // pub use php_segmenter::PhpSegmenter;
 // pub use elixir_segmenter::ElixirSegmenter;

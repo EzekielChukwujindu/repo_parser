@@ -8,7 +8,7 @@ The Code Segmenter is a Rust-based tool designed to parse and analyze code repos
 
 - **Cloning Git Repositories**: Automatically clones a Git repository into a temporary directory for analysis.
 - **Code Simplification**: Processes and simplifies code files based on language-specific segmenters.
-- **Error Logging**: Logs errors encountered during file processing to an `_arch_/error.txt` file.
+- **Error Logging**: Logs errors encountered during file processing to an `temp/_arch_/error.txt` file.
 - **Directory Handling**: Saves simplified code into a parallel `_arch_` directory structure outside the original directory being processed.
 
 ## Requirements
@@ -45,4 +45,4 @@ The application will:
 1. Clone the Git repository if a URL is provided.
 2. Normalize the input path.
 3. Process and simplify code files based on language-specific segmenters.
-4. Save the simplified code and log errors into the _arch_ directory.
+4. Save the simplified code and log errors into the temp/_arch_ directory.
