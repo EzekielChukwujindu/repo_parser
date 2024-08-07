@@ -75,14 +75,14 @@ impl CodeSegmenter for JavaScriptSegmenter {
         result
     }
 
-    fn extract_functions_classes(&self) -> Vec<String> {
+    fn extract_functions_classes(&self) -> String {
         // Extract functions and classes from the tree
-        let mut result = Vec::new();
+        let mut result = String::new();
         let root_node = self.tree.root_node();
         for node in root_node.children(&mut root_node.walk()) {
             let processed = self.process_node(&node, false);
             if !processed.is_empty() {
-                result.push(processed);
+                result.push_str(&processed);
             }
         }
         result

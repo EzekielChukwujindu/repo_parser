@@ -14,8 +14,10 @@ impl CodeSegmenter for PythonSegmenter {
         self.process_node(&mut cursor)
     }
 
-    fn extract_functions_classes(&self) -> Vec<String> {
-        Vec::new()
+    fn extract_functions_classes(&self) -> String {
+        String::new()
+        // let mut cursor = self.tree.walk();
+        // self.process_node_func_class(&mut cursor)
     }
 }
 
@@ -144,5 +146,59 @@ impl PythonSegmenter {
 
     fn get_node_text(&self, node: Node) -> String {
         self.source_code[node.start_byte()..node.end_byte()].to_string()
+    }
+
+    #[allow(dead_code)]
+    fn process_node_func_class(&self, cursor: &mut TreeCursor) -> String {
+        let mut result = String::new();
+
+        loop {
+            let node = cursor.node();
+
+            match node.kind() {
+                "function_definition" | "class_definition" => {
+                    let name = self.get_name(node);
+                    let start_line = node.start_position().row;
+                    let _end_line = node.end_position().row;
+
+                    writeln!(&mut result, "# Code for: {}", self.get_line(start_line)).unwrap();
+                    writeln!(&mut result, "def {name}(...):").unwrap();
+                    writeln!(&mut result, "    pass").unwrap();
+
+                    // Skip the children (implementation details)
+                    cursor.goto_first_child();
+                    while cursor.goto_next_sibling() {}
+                    cursor.goto_parent();
+                },
+                "module" => {
+                    if cursor.goto_first_child() {
+                        result.push_str(&self.process_node(cursor));
+                        cursor.goto_parent();
+                    }
+                },
+                _ => {
+                    if cursor.goto_first_child() {
+                        result.push_str(&self.process_node(cursor));
+                        cursor.goto_parent();
+                    }
+                }
+            }
+
+            if !cursor.goto_next_sibling() {
+                break;
+            }
+        }
+
+        result
+    }
+
+    fn get_name(&self, node: Node) -> &str {
+        node.child_by_field_name("name")
+            .and_then(|name_node| name_node.utf8_text(self.source_code.as_bytes()).ok())
+            .unwrap_or("unknown")
+    }
+
+    fn get_line(&self, line_number: usize) -> &str {
+        self.source_code.lines().nth(line_number).unwrap_or("")
     }
 }
