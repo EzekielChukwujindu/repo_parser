@@ -1,33 +1,31 @@
-
 use tree_sitter::{Parser, Node, TreeCursor};
-use tree_sitter_javascript::language;
+use tree_sitter_typescript::language_typescript as language;
 use crate::code_segmenter::CodeSegmenter;
 
-pub struct JavaScriptSegmenter {
+pub struct TypeScriptSegmenter {
     tree: tree_sitter::Tree,
     source_code: String,
 }
 
-impl CodeSegmenter for JavaScriptSegmenter {
+impl CodeSegmenter for TypeScriptSegmenter {
     fn simplify_code(&self) -> String {
         let mut cursor = self.tree.walk();
         self.process_node(&mut cursor)
-        // self.print_node(&mut cursor, 0);
-        // String::new()
     }
 
     fn extract_functions_classes(&self) -> String {
-        String::new() // Placeholder for potential future implementation
+        let mut cursor = self.tree.walk();
+        self.process_node_func_class(&mut cursor)
     }
 }
 
-impl JavaScriptSegmenter {
+impl TypeScriptSegmenter {
     pub fn new(code: String) -> Box<dyn CodeSegmenter> {
         let mut parser = Parser::new();
-        parser.set_language(language()).expect("Error loading JavaScript grammar");
-        let tree = parser.parse(&code, None).expect("Failed to parse the code");
+        parser.set_language(language()).expect("Error loading TypeScript grammar");
+        let tree = parser.parse(&code, None).expect("Failed to parse TypeScript code");
 
-        Box::new(JavaScriptSegmenter {
+        Box::new(TypeScriptSegmenter {
             tree,
             source_code: code,
         })
@@ -41,11 +39,68 @@ impl JavaScriptSegmenter {
             "function_declaration" => self.process_function(cursor),
             "method_definition" => self.process_method(cursor),
             "export_statement" => self.process_export(cursor),
+            "variable_declaration" => self.process_variable_declaration(cursor),
             "comment" => String::new(), // Ignore comments
             _ => self.get_node_text(node),
         }
     }
 
+    fn process_interface(&self, cursor: &mut TreeCursor) -> String {
+        let node = cursor.node();
+        let interface_name = node.child_by_field_name("name")
+            .map(|n| self.get_node_text(n))
+            .unwrap_or_else(|| "UnnamedInterface".to_string());
+    
+        let mut interface_def = format!("interface {} {{\n", interface_name);
+    
+        if let Some(body) = node.child_by_field_name("body") {
+            for child in body.children(&mut body.walk()) {
+                match child.kind() {
+                    "formal_parameters" => {
+                        let method_def = self.get_node_text(child);
+                        interface_def.push_str(&format!("    {};\n", method_def));
+                    },
+                    "property_definition" => {
+                        let property_def = self.get_node_text(child);
+                        interface_def.push_str(&format!("    {};\n", property_def));
+                    },
+                    _ => {}
+                }
+            }
+        }
+    
+        interface_def.push_str("}\n");
+        interface_def
+    }
+    
+    fn process_abstract_class(&self, cursor: &mut TreeCursor) -> String {
+        let node = cursor.node();
+        let class_name = node.child_by_field_name("name")
+            .map(|n| self.get_node_text(n))
+            .unwrap_or_else(|| "UnnamedAbstractClass".to_string());
+    
+        let mut class_def = format!("abstract class {} {{\n", class_name);
+    
+        if let Some(body) = node.child_by_field_name("body") {
+            for child in body.children(&mut body.walk()) {
+                match child.kind() {
+                    "method_definition" => {
+                        let mut child_cursor = child.walk();
+                        let method_def = self.process_method(&mut child_cursor);
+                        class_def.push_str(&method_def.lines().map(|line| format!("    {}\n", line)).collect::<String>());
+                    },
+                    "public_field_definition" => {
+                        let field_def = self.get_node_text(child);
+                        class_def.push_str(&format!("    {};\n", field_def));
+                    },
+                    _ => {}
+                }
+            }
+        }
+    
+        class_def.push_str("}\n");
+        class_def
+    }
     fn process_program(&self, cursor: &mut TreeCursor) -> String {
         let mut result = String::new();
         if cursor.goto_first_child() {
@@ -68,9 +123,21 @@ impl JavaScriptSegmenter {
         let node = cursor.node();
         if let Some(declaration) = node.child(1) {
             match declaration.kind() {
-                "function_declaration" | "class_declaration" => {
+                "function_declaration" => {
                     let mut declaration_cursor = declaration.walk();
-                    format!("export {}", self.process_node(&mut declaration_cursor))
+                    format!("export {}", self.process_function(&mut declaration_cursor))
+                },
+                "class_declaration" => {
+                    let mut declaration_cursor = declaration.walk();
+                    format!("export {}", self.process_class(&mut declaration_cursor))
+                },
+                "interface_declaration" => {
+                    let mut declaration_cursor = declaration.walk();
+                    format!("export {}", self.process_interface(&mut declaration_cursor))
+                },
+                "abstract_class_declaration" => {
+                    let mut declaration_cursor = declaration.walk();
+                    format!("export {}", self.process_abstract_class(&mut declaration_cursor))
                 },
                 "default_keyword" => {
                     if let Some(class_decl) = node.child(2) {
@@ -85,6 +152,26 @@ impl JavaScriptSegmenter {
         } else {
             String::new()
         }
+    }
+    fn process_variable_declaration(&self, cursor: &mut TreeCursor) -> String {
+        let node = cursor.node();
+        let mut result = String::new();
+
+        if let Some(declarators) = node.child_by_field_name("declarators") {
+            for declarator in declarators.children(&mut declarators.walk()) {
+                if let Some(name) = declarator.child_by_field_name("name") {
+                    let var_name = self.get_node_text(name);
+                    if let Some(init) = declarator.child_by_field_name("init") {
+                        let var_init = self.get_node_text(init);
+                        result.push_str(&format!("const {} = {};\n", var_name, var_init));
+                    } else {
+                        result.push_str(&format!("const {};\n", var_name));
+                    }
+                }
+            }
+        }
+
+        result
     }
 
     fn process_class(&self, cursor: &mut TreeCursor) -> String {

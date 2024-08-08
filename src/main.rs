@@ -95,7 +95,7 @@ async fn main() {
         // ("kotlin".to_string(), KotlinSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
         // ("lua".to_string(), LuaSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
         // ("perl".to_string(), PerlSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
-        // ("ts".to_string(), TypeScriptSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
+        ("ts".to_string(), TypeScriptSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
         ("java".to_string(), JavaSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
         // ("php".to_string(), PhpSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
         // ("elixir".to_string(), ElixirSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
