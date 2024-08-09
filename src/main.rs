@@ -90,7 +90,7 @@ async fn main() {
         // ("csharp".to_string(), CSharpSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
         // ("ruby".to_string(), RubySegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
         // ("scala".to_string(), ScalaSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
-        // ("rust".to_string(), RustSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
+        ("rust".to_string(), RustSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
         // ("go".to_string(), GoSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
         // ("kotlin".to_string(), KotlinSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
         // ("lua".to_string(), LuaSegmenter::new as fn(String) -> Box<dyn CodeSegmenter>),
