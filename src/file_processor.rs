@@ -82,9 +82,43 @@ fn generate_directory_tree<'a>(
 
         if path.is_dir() {
             let mut entries = Vec::new();
-            let mut read_dir = fs::read_dir(path).await.unwrap();
-            while let Ok(Some(entry)) = read_dir.next_entry().await {
-                entries.push(entry);
+            if let Ok(mut read_dir) = fs::read_dir(path).await {
+                while let Ok(Some(entry)) = read_dir.next_entry().await {
+                    let entry_name = entry.file_name();
+                    // Convert OsString to &str for easier comparison
+                    let entry_name_str = entry_name.to_str().unwrap_or("");
+
+                    // Skip directories that start with '.' or match common directories
+                    if entry_name_str.starts_with('.')
+                    || entry_name_str == "node_modules"
+                    || entry_name_str == "target"
+                    || entry_name_str == "dist"
+                    || entry_name_str == "build"
+                    || entry_name_str == "vendor"
+                    || entry_name_str == "__pycache__"
+                    || entry_name_str == "logs"
+                    || entry_name_str == "coverage"
+                    || entry_name_str == "venv"
+                    || entry_name_str == "tmp"
+                    || entry_name_str == "temp"
+                    || entry_name_str == "cache"
+                    || entry_name_str == "Pods"
+                    || entry_name_str == "DerivedData"
+                    || entry_name_str == "bin"
+                    || entry_name_str == "pkg"
+                    || entry_name_str == "migrations"
+                    || entry_name_str == "CMakeFiles"
+                    || entry_name_str == "CMakeCache.txt"
+                    || entry_name_str == "Gemfile.lock"
+                    || entry_name_str == "composer.lock"
+                    || entry_name_str == "_build"
+                    || entry_name_str == "deps"
+                {
+                    continue;
+                }
+
+                    entries.push(entry);
+                }
             }
             entries.sort_by_key(|a| a.file_name());
             let count = entries.len();
@@ -103,6 +137,8 @@ fn generate_directory_tree<'a>(
         result
     })
 }
+
+
 pub async fn main_parser(
     directory_path: String,
     language_extensions: HashMap<String, String>,

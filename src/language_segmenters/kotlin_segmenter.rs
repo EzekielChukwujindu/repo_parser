@@ -23,7 +23,7 @@ impl CodeSegmenter for KotlinSegmenter {
 impl KotlinSegmenter {
     pub fn new(code: String) -> Box<dyn CodeSegmenter> {
         let mut parser = Parser::new();
-        parser.set_language(language())
+        parser.set_language(tree_sitter_kotlin.language())
             .expect("Error loading Kotlin grammar");
         let tree = parser.parse(&code, None)
             .expect("Failed to parse Kotlin code");
